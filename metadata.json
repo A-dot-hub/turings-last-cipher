@@ -1,0 +1,6 @@
+{
+  "name": "Turing's Last Cipher",
+  "description": "A browser-based puzzle game set in a retro terminal, deciphering archives allegedly left behind by Alan Turing.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
