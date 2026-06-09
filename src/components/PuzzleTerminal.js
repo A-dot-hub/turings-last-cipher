@@ -1,24 +1,27 @@
-import { Icons, renderIcon } from '../icons.js';
-import { renderAdaDialogue } from './AdaDialogue.js';
+import { Icons, renderIcon } from "../icons.js";
+import { renderAdaDialogue } from "./AdaDialogue.js";
 
 export function renderPuzzleTerminal({ level, onBack, onSolve }) {
-  const container = document.createElement('div');
-  container.className = "flex flex-col h-full w-full max-w-5xl mx-auto p-4 md:p-8 z-10 relative font-mono opacity-0 transition-opacity duration-500 scale-95";
-  
+  const container = document.createElement("div");
+  container.className =
+    "flex flex-col h-full w-full max-w-5xl mx-auto p-4 md:p-8 z-10 relative font-mono opacity-0 transition-opacity duration-500 scale-95";
+
   setTimeout(() => {
-    container.classList.remove('opacity-0', 'scale-95');
-    container.classList.add('opacity-100', 'scale-100');
+    container.classList.remove("opacity-0", "scale-95");
+    container.classList.add("opacity-100", "scale-100");
   }, 50);
+
+  const isLogic = level.type === "logic";
 
   container.innerHTML = `
     <div class="flex items-center justify-between mb-8 pb-4 border-b border-panel">
       <button id="btn-abort" class="flex items-center space-x-2 text-text-secondary hover:text-terminal-green transition-colors cursor-pointer">
-        ${renderIcon(Icons.ArrowLeft, 'w-4 h-4')}
+        ${renderIcon(Icons.ArrowLeft, "w-4 h-4")}
         <span class="hidden md:inline">ABORT SEQUENCE</span>
       </button>
       <div class="flex items-center space-x-4">
-        ${renderIcon(Icons.Terminal, 'w-5 h-5 text-terminal-green animate-pulse')}
-        <span class="text-terminal-green tracking-widest text-sm text-glow">TERMINAL_${level.id.toString().padStart(2, '0')}</span>
+        ${renderIcon(Icons.Terminal, "w-5 h-5 text-terminal-green animate-pulse")}
+        <span class="text-terminal-green tracking-widest text-sm text-glow">TERMINAL_${level.id.toString().padStart(2, "0")}</span>
       </div>
     </div>
 
@@ -26,22 +29,30 @@ export function renderPuzzleTerminal({ level, onBack, onSolve }) {
       <div class="flex flex-col space-y-6 overflow-y-auto w-full">
         <div class="bg-bg-secondary border border-panel p-6 w-full">
           <h3 class="text-text-secondary text-xs tracking-widest mb-4 flex items-center">
-            ${renderIcon(Icons.ShieldAlert, 'w-3 h-3 mr-2')}
+            ${renderIcon(Icons.ShieldAlert, "w-3 h-3 mr-2")}
             ARCHIVE METADATA
           </h3>
           <p class="whitespace-pre-wrap text-text-primary text-sm leading-relaxed">${level.lore}</p>
         </div>
 
-        <div class="bg-bg-secondary border border-panel p-6 flex-grow flex flex-col w-full">
+        <div class="bg-bg-secondary border border-panel p-6 flex-grow flex flex-col w-full h-[300px]">
           <h3 class="text-text-secondary text-xs tracking-widest mb-4 flex items-center">
-            ${renderIcon(Icons.Cpu, 'w-3 h-3 mr-2')}
+            ${renderIcon(Icons.Cpu, "w-3 h-3 mr-2")}
             ADA ASSISTANT
           </h3>
-          <div id="ada-dialogue-container" class="flex-grow"></div>
           
-          <button id="btn-hint" class="mt-6 text-xs text-terminal-green hover:bg-terminal-green/10 border border-terminal-green/30 px-3 py-2 transition-colors cursor-pointer w-full text-center">
-            [ REQUEST ANALYSIS ]
-          </button>
+          <div id="ada-dialogue-container" class="flex-grow overflow-y-auto mb-4 custom-scrollbar"></div>
+          
+          ${
+            isLogic
+              ? `<form id="chat-form" class="mt-2 flex w-full">
+                 <input type="text" id="chat-input" class="flex-grow bg-black/50 border border-terminal-green/50 text-terminal-green px-3 py-2 text-sm focus:outline-none focus:border-terminal-green transition-all" placeholder="Message ADA...">
+                 <button type="submit" class="ml-2 px-3 py-2 border border-terminal-green/30 text-terminal-green hover:bg-terminal-green/20">SEND</button>
+               </form>`
+              : `<button id="btn-hint" class="mt-auto text-xs text-terminal-green hover:bg-terminal-green/10 border border-terminal-green/30 px-3 py-2 transition-colors cursor-pointer w-full text-center">
+                 [ REQUEST ANALYSIS ]
+               </button>`
+          }
         </div>
       </div>
 
@@ -72,55 +83,111 @@ export function renderPuzzleTerminal({ level, onBack, onSolve }) {
   `;
 
   setTimeout(() => {
-    container.querySelector('#btn-abort').addEventListener('click', onBack);
+    container.querySelector("#btn-abort").addEventListener("click", onBack);
 
-    const adaDialogueContainer = container.querySelector('#ada-dialogue-container');
-    let currentAda = renderAdaDialogue({ text: "Waiting for cryptanalyst input...\n\nRequest analysis if assistance is required." });
-    adaDialogueContainer.appendChild(currentAda);
+    const adaDialogueContainer = container.querySelector(
+      "#ada-dialogue-container",
+    );
+    let currentAda;
 
-    const btnHint = container.querySelector('#btn-hint');
-    btnHint.addEventListener('click', () => {
-      btnHint.disabled = true;
-      btnHint.classList.add('opacity-50', 'cursor-not-allowed');
-      if (currentAda.cleanup) currentAda.cleanup();
-      adaDialogueContainer.innerHTML = '';
-      currentAda = renderAdaDialogue({ text: level.hint });
+    if (!isLogic) {
+      currentAda = renderAdaDialogue({
+        text: "Waiting for cryptanalyst input...\n\nRequest analysis if assistance is required.",
+      });
       adaDialogueContainer.appendChild(currentAda);
-    });
 
-    const form = container.querySelector('#puzzle-form');
-    const input = container.querySelector('#puzzle-input');
-    const errorMsg = container.querySelector('#error-msg');
-    const successMsg = container.querySelector('#success-msg');
+      const btnHint = container.querySelector("#btn-hint");
+      btnHint.addEventListener("click", () => {
+        btnHint.disabled = true;
+        btnHint.classList.add("opacity-50", "cursor-not-allowed");
+        if (currentAda.cleanup) currentAda.cleanup();
+        adaDialogueContainer.innerHTML = "";
+        currentAda = renderAdaDialogue({ text: level.hint });
+        adaDialogueContainer.appendChild(currentAda);
+      });
+    } else {
+      // Logic mode chat handling
+      let chatHistory = [];
+      const appendMessage = (role, text) => {
+        const msgDiv = document.createElement("div");
+        msgDiv.className = `mb-3 text-sm ${role === "user" ? "text-accent-blue text-right" : "text-terminal-green text-left"}`;
+        msgDiv.innerText = `${role === "user" ? "YOU: " : "ADA: "}${text}`;
+        adaDialogueContainer.appendChild(msgDiv);
+        adaDialogueContainer.scrollTop = adaDialogueContainer.scrollHeight;
+      };
 
-    input.addEventListener('input', (e) => {
+      appendMessage(
+        "assistant",
+        "I am ADA. Are you the one trying to solve my architect's final puzzle?",
+      );
+
+      const chatForm = container.querySelector("#chat-form");
+      const chatInput = container.querySelector("#chat-input");
+      const chatBtn = chatForm.querySelector("button");
+
+      chatForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const msg = chatInput.value.trim();
+        if (!msg) return;
+
+        appendMessage("user", msg);
+        chatHistory.push({ role: "user", content: msg });
+        chatInput.value = "";
+        chatInput.disabled = true;
+        chatBtn.disabled = true;
+
+        try {
+          const res = await fetch("/api/chat", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ messages: chatHistory }),
+          });
+          const data = await res.json();
+          appendMessage("assistant", data.reply || "Connection lost...");
+          chatHistory.push({ role: "assistant", content: data.reply || "" });
+        } catch (err) {
+          appendMessage("assistant", "ERROR: Unable to reach core processor.");
+        } finally {
+          chatInput.disabled = false;
+          chatBtn.disabled = false;
+          chatInput.focus();
+        }
+      });
+    }
+
+    const form = container.querySelector("#puzzle-form");
+    const input = container.querySelector("#puzzle-input");
+    const errorMsg = container.querySelector("#error-msg");
+    const successMsg = container.querySelector("#success-msg");
+
+    input.addEventListener("input", (e) => {
       e.target.value = e.target.value.toUpperCase();
     });
 
-    form.addEventListener('submit', (e) => {
+    form.addEventListener("submit", (e) => {
       e.preventDefault();
       const val = input.value.trim().toUpperCase();
       if (val === level.plainText) {
-        errorMsg.classList.add('hidden');
-        form.classList.add('hidden');
-        successMsg.classList.remove('hidden');
+        errorMsg.classList.add("hidden");
+        form.classList.add("hidden");
+        successMsg.classList.remove("hidden");
         setTimeout(() => {
-          successMsg.classList.remove('scale-95', 'opacity-0');
-          successMsg.classList.add('scale-100', 'opacity-100');
+          successMsg.classList.remove("scale-95", "opacity-0");
+          successMsg.classList.add("scale-100", "opacity-100");
         }, 50);
 
-        if (currentAda.cleanup) currentAda.cleanup();
+        if (currentAda && currentAda.cleanup) currentAda.cleanup();
 
         setTimeout(() => {
           onSolve(level.id);
         }, 3000);
       } else {
-        errorMsg.innerText = 'DECRYPTION FAILED. INVALID PLAINTEXT.';
-        errorMsg.classList.remove('hidden');
+        errorMsg.innerText = "DECRYPTION FAILED. INVALID PLAINTEXT.";
+        errorMsg.classList.remove("hidden");
       }
     });
 
-    input.focus();
+    if (!isLogic) input.focus();
   }, 0);
 
   return container;
