@@ -2,18 +2,33 @@ import { renderMainMenu } from './components/MainMenu.js';
 import { renderLevelSelect } from './components/LevelSelect.js';
 import { renderPuzzleTerminal } from './components/PuzzleTerminal.js';
 import { renderCrtOverlay } from './components/CrtOverlay.js';
+import { renderAchievements } from './components/Achievements.js';
+import { renderBootSequence } from './components/BootSequence.js';
+import { renderArchive } from './components/Archive.js';
+import { renderNotebook } from './components/Notebook.js';
 import { LEVELS } from './data/gameData.js';
+import { audioManager } from './managers/AudioManager.js';
+import { stateManager } from './managers/StateManager.js';
 
 export class App {
   constructor(rootElement) {
     this.root = rootElement;
-    this.viewState = 'menu';
-    this.currentLevel = 1;
-    this.unlockedLevel = parseInt(localStorage.getItem('turings_cipher_progress') || '1', 10);
+    
+    // Only show boot sequence if not previously booted this session
+    if (!sessionStorage.getItem('turing_booted')) {
+      this.viewState = 'boot';
+    } else {
+      this.viewState = 'menu';
+    }
+    
+    this.currentLevel = stateManager.state.unlockedLevel;
     this.render();
   }
 
   setViewState(view) {
+    if (view === 'menu') {
+      sessionStorage.setItem('turing_booted', '1');
+    }
     this.viewState = view;
     this.render();
   }
@@ -24,17 +39,27 @@ export class App {
 
   handleSolve(levelId) {
     const next = levelId + 1;
-    if (next > this.unlockedLevel) {
-      this.unlockedLevel = next;
-      localStorage.setItem('turings_cipher_progress', next.toString());
+    if (next <= LEVELS.length) {
+      stateManager.unlockLevel(next);
+      this.setViewState('chapters');
+    } else {
+      // Game Complete
+      this.setViewState('menu');
     }
-    this.setViewState('chapters');
   }
 
   render() {
     this.root.innerHTML = '';
     this.root.className = "h-screen w-screen bg-bg-primary text-text-primary overflow-hidden relative selection:bg-terminal-green/30 selection:text-terminal-green-dark";
     
+    // Init audio on first render interaction handled via buttons usually, but we call it here to ensure it's ready
+    const initAudio = () => {
+      audioManager.init();
+      audioManager.startHum();
+      document.removeEventListener('click', initAudio);
+    };
+    document.addEventListener('click', initAudio);
+
     this.root.appendChild(renderCrtOverlay());
 
     const bg = document.createElement('div');
@@ -47,14 +72,20 @@ export class App {
     const viewContainer = document.createElement('div');
     viewContainer.className = "h-full w-full transition-all duration-300";
 
-    if (this.viewState === 'menu') {
+    if (this.viewState === 'boot') {
+      const boot = renderBootSequence({
+        onComplete: () => this.setViewState('menu')
+      });
+      viewContainer.appendChild(boot);
+    } else if (this.viewState === 'menu') {
       const menu = renderMainMenu({
-        onBegin: () => this.setViewState('chapters')
+        onBegin: () => this.setViewState('chapters'),
+        onNavigate: (route) => this.setViewState(route)
       });
       viewContainer.appendChild(menu);
     } else if (this.viewState === 'chapters') {
       const chapters = renderLevelSelect({
-        unlockedLevel: this.unlockedLevel,
+        unlockedLevel: stateManager.state.unlockedLevel,
         levels: LEVELS,
         onBack: () => this.setViewState('menu'),
         onSelect: (id) => {
@@ -71,6 +102,21 @@ export class App {
         onSolve: (id) => this.handleSolve(id)
       });
       viewContainer.appendChild(puzzle);
+    } else if (this.viewState === 'achievements') {
+      const achievements = renderAchievements({
+        onBack: () => this.setViewState('menu')
+      });
+      viewContainer.appendChild(achievements);
+    } else if (this.viewState === 'archive') {
+      const archive = renderArchive({
+        onBack: () => this.setViewState('menu')
+      });
+      viewContainer.appendChild(archive);
+    } else if (this.viewState === 'notebook') {
+      const notebook = renderNotebook({
+        onBack: () => this.setViewState('menu')
+      });
+      viewContainer.appendChild(notebook);
     }
 
     main.appendChild(viewContainer);

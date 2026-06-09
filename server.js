@@ -17,6 +17,8 @@ async function startServer() {
   app.use(express.json());
 
   let groqClient = null;
+  console.log("GROQ KEY FOUND:", !!process.env.GROQ_API_KEY);
+  console.log("KEY PREFIX:", process.env.GROQ_API_KEY?.substring(0, 10));
 
   function getGroqClient() {
     if (!groqClient) {
@@ -42,7 +44,7 @@ async function startServer() {
 
       const aiResponse = await groq.chat.completions.create({
         messages: [adasPersona, ...messages],
-        model: "llama3-8b-8192", // Using a standard fast model on Groq
+        model: "llama-3.1-8b-instant", // Using a standard fast model on Groq
         temperature: 0.7,
         max_tokens: 150,
       });
