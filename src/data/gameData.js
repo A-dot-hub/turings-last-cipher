@@ -79,11 +79,23 @@ export const LEVELS = [
   {
     id: 8,
     title: "Archive 08: The Turing Test",
-    type: "logic",
-    cipherText: "CONVINCE HER.",
-    plainText: "ACCESS GRANTED: THE IMITATION GAME",
-    lore: "SYSTEM CORE REACHED.\n\nCONSCIOUSNESS SIMULATION ACTIVE. ANOMALY DETECTED.\n\nYou have solved the ciphers, but can you solve the machine? You must initiate a dialogue with ADA. Prove to her that the mind within the machine is real.",
-    hint: "Use the [ REQUEST ANALYSIS ] / dialogue panel to chat with ADA. You must convince her to grant you the final plaintext token. Then paste it here.",
+    type: "turingtest", // New puzzle type
+    lore: "SYSTEM CORE REACHED.\n\nCONSCIOUSNESS SIMULATION ACTIVE.\n\nAlan Turing proposed a simple test. A judge converses with two entities. One is a human, the other a machine. Your final trial is to determine which is which.",
+    hint: "Analyze the anomalies in their reasoning. The machine might struggle with nuanced emotional contradictions, or the human might struggle with rigid sequential memory.",
+    entities: {
+      A: [
+        "I find poetry interesting, though sometimes I struggle to grasp why certain words evoke specific feelings rather than others.",
+        "When I was a child, I distinctly remember the smell of rain on hot pavement. It still makes me feel a strange sense of loss.",
+        "I'm not sure how to answer that logic puzzle. It seems like a trick question.",
+      ],
+      B: [
+        "Poetry is fascinating. The cadence and structural rhythms often follow predictable patterns that trigger dopamine releases in the brain.",
+        "I recall the smell of rain. Petrichor. It is caused by the release of plant oils and geosmin from the soil.",
+        "The logic puzzle is straightforward. The paradox resolves if you assume zero as a valid state.",
+      ],
+    },
+    answer: "A", // A is human, B is machine
+    answerPlaintext: "ACCESS GRANTED: THE IMITATION GAME",
   },
 ];
 
