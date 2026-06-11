@@ -12,6 +12,18 @@ export function renderPuzzleTerminal({ level, onBack, onSolve }) {
   container.className =
     "flex flex-col h-full w-full max-w-5xl mx-auto p-4 md:p-8 z-10 relative font-mono opacity-0 transition-opacity duration-500 scale-95";
 
+  let timestampInterval;
+
+  const getFormattedTimestamp = () => {
+    const now = new Date();
+    const day = now.getDate().toString().padStart(2, "0");
+    const month = now.toLocaleString("en-US", { month: "short" }).toUpperCase();
+    const year = now.getFullYear();
+    const hours = now.getHours().toString().padStart(2, "0");
+    const minutes = now.getMinutes().toString().padStart(2, "0");
+    return `${day} ${month} ${year} ${hours}:${minutes}`;
+  };
+
   setTimeout(() => {
     container.classList.remove("opacity-0", "scale-95");
     container.classList.add("opacity-100", "scale-100");
@@ -26,6 +38,7 @@ export function renderPuzzleTerminal({ level, onBack, onSolve }) {
         <span class="hidden md:inline">ABORT SEQUENCE</span>
       </button>
       <div class="flex items-center space-x-4">
+        <span id="terminal-timestamp" class="text-terminal-green/70 text-xs font-mono tracking-widest"></span>
         ${renderIcon(Icons.Terminal, "w-5 h-5 text-terminal-green animate-pulse")}
         <span class="text-terminal-green tracking-widest text-sm text-glow">TERMINAL_${level.id.toString().padStart(2, "0")}</span>
         <span class="text-[10px] bg-red-900/20 text-red-500 border border-red-900/30 px-2 py-0.5 ml-2">THREAT: ${level.difficulty}</span>
@@ -122,7 +135,17 @@ export function renderPuzzleTerminal({ level, onBack, onSolve }) {
   }
 
   setTimeout(() => {
-    container.querySelector("#btn-abort").addEventListener("click", onBack);
+    const timestampElem = container.querySelector("#terminal-timestamp");
+    const updateTimestamp = () => {
+      timestampElem.innerText = getFormattedTimestamp();
+    };
+    updateTimestamp();
+    timestampInterval = setInterval(updateTimestamp, 60000);
+
+    container.querySelector("#btn-abort").addEventListener("click", () => {
+      clearInterval(timestampInterval);
+      onBack();
+    });
 
     // ADA Branching Dialogue Logic
     const adaDialogueContainer = container.querySelector(
@@ -249,6 +272,7 @@ export function renderPuzzleTerminal({ level, onBack, onSolve }) {
           if (currentAda && currentAda.cleanup) currentAda.cleanup();
 
           setTimeout(() => {
+            clearInterval(timestampInterval);
             if (level.id === 1) stateManager.unlockAchievement("FIRST_DECRYPT");
             if (level.type === "morse")
               stateManager.unlockAchievement("MORSE_MASTER");
@@ -294,6 +318,7 @@ export function renderPuzzleTerminal({ level, onBack, onSolve }) {
             }, 2000);
 
             setTimeout(() => {
+              clearInterval(timestampInterval);
               onSolve(level.id); // Trigger end of game
             }, 6000);
           } else {
