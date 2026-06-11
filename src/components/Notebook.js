@@ -4,7 +4,7 @@ import { audioManager } from "../managers/AudioManager.js";
 export function renderNotebook({ onBack }) {
   const container = document.createElement("div");
   container.className =
-    "flex flex-col h-full w-full max-w-5xl mx-auto p-4 md:p-8 z-10 relative opacity-0 transition-opacity duration-500 text-text-primary font-mono bg-bg-primary";
+    "flex flex-col h-full w-full max-w-5xl mx-auto p-4 md:p-8 z-10 relative opacity-0 transition-opacity duration-500 text-text-primary font-mono";
 
   setTimeout(() => container.classList.replace("opacity-0", "opacity-100"), 50);
 
