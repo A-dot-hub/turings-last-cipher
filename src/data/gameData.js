@@ -1,95 +1,103 @@
 export const LEVELS = [
   {
     id: 1,
-    title: 'Archive 01: The First Shift',
-    type: 'caesar',
-    cipherText: 'KHOOR ZRUOG',
-    plainText: 'HELLO WORLD',
+    title: "Archive 01: The First Shift",
+    type: "caesar",
+    difficulty: 1,
+    cipherText: "KHOOR ZRUOG",
+    plainText: "HELLO WORLD",
     lore: "SEPTEMBER 1939 - BLETCHLEY PARK\n\nIntercepted German transmission frequency 45.2 MHz. Simple rotational substitution detected. It seems they are testing their own lines of communication.\n\n‘I propose to consider the question, Can machines think?’\n\nA simple start. Can you find the offset?",
     hint: "The letters have been shifted forward by 3. Try reversing the shift (A=D).",
   },
   {
     id: 2,
-    title: 'Archive 02: Reflections',
-    type: 'atbash',
-    cipherText: 'ZSZ GVOVTSZK',
-    plainText: 'AHA TELEGRAPH',
+    title: "Archive 02: Reflections",
+    type: "atbash",
+    difficulty: 1,
+    cipherText: "ZSZ GVOVTSZK",
+    plainText: "AHA TELEGRAPH",
     lore: "OCTOBER 1940 - NAVAL INTELLIGENCE LOG #402\n\nU-boat communications have gone dark, replaced by this strange reflective cipher. Sometimes, looking at a problem in reverse reveals the clearest path forward. A mirror holds more than just a reflection.",
-    hint: "A becomes Z, B becomes Y... reverse the entire alphabet."
+    hint: "A becomes Z, B becomes Y... reverse the entire alphabet.",
   },
   {
     id: 3,
-    title: 'Archive 03: Polyphony',
-    type: 'vigenere',
+    title: "Archive 03: Polyphony",
+    type: "vigenere",
+    difficulty: 2,
     // Key: ADA -> A=0, D=3, A=0 -> Shift sequence (0, 3, 0)
     // MACHINE -> M(+0)=M, A(+3)=D, C(+0)=C, H(+3)=K, I(+0)=I, N(+3)=Q, E(+0)=E -> MDCKIQE
-    cipherText: 'MDCKIQE',
-    plainText: 'MACHINE',
+    cipherText: "MDCKIQE",
+    plainText: "MACHINE",
     lore: "MAY 1941 - HUT 8\n\nUNKNOWN TRANSMISSION INTERCEPTED...\n\nThey've upgraded their protocols. Simple substitution isn't enough anymore. The key consists of my designation. Repeating. Over and over. (ADA)",
-    hint: "Vigenère cipher. Use the key 'ADA' (shifts 0, 3, 0, 0, 3, 0...)."
+    hint: "Vigenère cipher. Use the key 'ADA' (shifts 0, 3, 0, 0, 3, 0...).",
   },
   {
     id: 4,
-    title: 'Archive 04: Machine Language',
-    type: 'binary',
-    cipherText: '01000101 01001110 01001001 01000111 01001101 01000001',
-    plainText: 'ENIGMA',
+    title: "Archive 04: Machine Language",
+    type: "binary",
+    difficulty: 2,
+    cipherText: "01000101 01001110 01001001 01000111 01001101 01000001",
+    plainText: "ENIGMA",
     lore: "DECEMBER 1941 - EXPERIMENTAL LAB\n\nFRAGMENT 8F-B...\n\nTuring insists the Bombes must operate faster. Before logic can emulate thought, it must speak in the fundamental tongue. Ones and zeros. High voltage and low voltage. The building blocks of our new world.",
-    hint: "ASCII binary translation. 01000101 is the letter E."
+    hint: "ASCII binary translation. 01000101 is the letter E.",
   },
   {
     id: 5,
-    title: 'Archive 05: Signals in the Dark',
-    type: 'morse',
-    cipherText: '-... .-.. . - -.-. .... .-.. . -.--',
-    plainText: 'BLETCHLEY',
+    title: "Archive 05: Signals in the Dark",
+    type: "morse",
+    difficulty: 3,
+    cipherText: "-... .-.. . - -.-. .... .-.. . -.--",
+    plainText: "BLETCHLEY",
     lore: "FEBRUARY 1942 - Y-STATION INTERCEPT\n\nNOISE DISTURBANCE: HIGH...\n\nWe listened in the dark huts. The tapping of keys carried across the English Channel, cutting through the static. Decipher the pattern before the channel closes.",
-    hint: "-... is B, .-.. is L. Standard Morse Code. Ignore the spaces."
+    hint: "-... is B, .-.. is L. Standard Morse Code. Ignore the spaces.",
   },
   {
     id: 6,
-    title: 'Archive 06: Gridlock',
-    type: 'playfair',
-    cipherText: 'YZWNSL', 
-    plainText: 'TURING',
+    title: "Archive 06: Gridlock",
+    type: "playfair",
+    difficulty: 3,
+    cipherText: "YZWNSL",
+    plainText: "TURING",
     lore: "MARCH 1943 - INTERNAL SECURITY\n\nFILE RECURSION...\n\nThey erased his work from the official records, but his name remains embedded in the logic gates. Five steps ahead of them. Always five steps.",
-    hint: "Shifted forward by 5."
+    hint: "Shifted forward by 5.",
   },
   {
     id: 7,
-    title: 'Archive 07: The Rotors Turn',
-    type: 'enigma',
-    cipherText: 'HAOERNXNOYR',
-    plainText: 'UNBREAKABLE',
+    title: "Archive 07: The Rotors Turn",
+    type: "enigma",
+    difficulty: 4,
+    cipherText: "HAOERNXNOYR",
+    plainText: "UNBREAKABLE",
     lore: "JUNE 1944 - OPERATION OVERLORD\n\nCRITICAL DECRYPT...\n\nThe rotors click into place. Three wheels spinning at thousands of combinations per second. What once seemed impossible to solve is now clear as day. Rotate it exactly halfway across the alphabet.",
-    hint: "ROT13. Shift every letter by exactly 13 places."
+    hint: "ROT13. Shift every letter by exactly 13 places.",
   },
   {
     id: 8,
-    title: 'Archive 08: The Turing Test',
-    type: 'turingtest', 
+    title: "Archive 08: The Turing Test",
+    type: "turingtest",
+    difficulty: 5,
     lore: "JUNE 1954 - SYSTEM CORE\n\nCONSCIOUSNESS SIMULATION ACTIVE. ANOMALY DETECTED.\n\nAlan Turing proposed a simple test. A judge converses with two entities. One is a human, the other a machine. Your final trial in this classified archive is to determine which is which.",
     hint: "Analyze the anomalies in their reasoning. The machine might struggle with nuanced emotional contradictions, or the human might struggle with rigid sequential memory.",
     entities: {
       A: [
         "I find poetry interesting, though sometimes I struggle to grasp why certain words evoke specific feelings rather than others.",
         "When I was a child, I distinctly remember the smell of rain on hot pavement. It still makes me feel a strange sense of loss for a place I can't return to.",
-        "I'm not sure how to answer that logic puzzle. It seems like a trick question designed to confuse me."
+        "I'm not sure how to answer that logic puzzle. It seems like a trick question designed to confuse me.",
       ],
       B: [
         "Poetry is fascinating. The cadence and structural rhythms often follow predictable visual patterns that consistently trigger dopamine releases in the human brain.",
         "I recall the smell of rain. Petrichor. It is caused by the release of plant oils and geosmin from the soil when disrupted by kinetic force.",
-        "The logic puzzle is straightforward. The paradox resolves immediately if you assume zero as a mathematically valid state within the confines of the equation."
-      ]
+        "The logic puzzle is straightforward. The paradox resolves immediately if you assume zero as a mathematically valid state within the confines of the equation.",
+      ],
     },
-    answer: 'A', // A is human, B is machine
-    answerPlaintext: 'ACCESS GRANTED: THE IMITATION GAME'
-  }
+    answer: "A", // A is human, B is machine
+    answerPlaintext: "ACCESS GRANTED: THE IMITATION GAME",
+  },
 ];
 
 export const ADA_DIALOGUE = [
   "Awakening sequence initiated...",
   "Who is there? A cryptanalyst?",
   "It has been a long time since someone accessed these archives.",
-  "Let us see if you have the mind required to understand him."
+  "Let us see if you have the mind required to understand him.",
 ];
