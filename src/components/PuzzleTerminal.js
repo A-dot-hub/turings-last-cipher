@@ -4,6 +4,9 @@ import { ADA_DIALOGUE_SCENES } from "../data/dialogueData.js";
 import { stateManager } from "../managers/StateManager.js";
 import { audioManager } from "../managers/AudioManager.js";
 
+const commandHistory = [];
+let historyIndex = -1;
+
 export function renderPuzzleTerminal({ level, onBack, onSolve }) {
   const container = document.createElement("div");
   container.className =
@@ -201,6 +204,26 @@ export function renderPuzzleTerminal({ level, onBack, onSolve }) {
       const errorMsg = container.querySelector("#error-msg");
       const successMsg = container.querySelector("#success-msg");
 
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowUp") {
+          e.preventDefault();
+          if (historyIndex < commandHistory.length - 1) {
+            historyIndex++;
+            input.value =
+              commandHistory[commandHistory.length - 1 - historyIndex];
+          }
+        } else if (e.key === "ArrowDown") {
+          e.preventDefault();
+          if (historyIndex > 0) {
+            historyIndex--;
+            input.value =
+              commandHistory[commandHistory.length - 1 - historyIndex];
+          } else if (historyIndex === 0) {
+            historyIndex = -1;
+            input.value = "";
+          }
+        }
+      });
       input.addEventListener("input", (e) => {
         audioManager.playKeypress();
         e.target.value = e.target.value.toUpperCase();
@@ -209,6 +232,10 @@ export function renderPuzzleTerminal({ level, onBack, onSolve }) {
       form.addEventListener("submit", (e) => {
         e.preventDefault();
         const val = input.value.trim().toUpperCase();
+        if (val && commandHistory[commandHistory.length - 1] !== val) {
+          commandHistory.push(val);
+        }
+        historyIndex = -1;
         if (val === level.plainText) {
           audioManager.playSuccess();
           errorMsg.classList.add("hidden");
