@@ -1,17 +1,19 @@
-import { Icons, renderIcon } from '../icons.js';
-import { audioManager } from '../managers/AudioManager.js';
+import { Icons, renderIcon } from "../icons.js";
+import { audioManager } from "../managers/AudioManager.js";
 
 export function renderNotebook({ onBack }) {
-  const container = document.createElement('div');
-  container.className = "flex flex-col h-full w-full max-w-5xl mx-auto p-4 md:p-8 z-10 relative opacity-0 transition-opacity duration-500 text-text-primary font-mono";
-  
-  setTimeout(() => container.classList.replace('opacity-0', 'opacity-100'), 50);
+  const container = document.createElement("div");
+  container.className =
+    "flex flex-col h-full w-full max-w-5xl mx-auto p-4 md:p-8 z-10 relative opacity-0 transition-opacity duration-500 text-text-primary font-mono bg-bg-primary";
 
-  const header = document.createElement('div');
-  header.className = "flex items-center justify-between mb-8 pb-4 border-b border-panel";
+  setTimeout(() => container.classList.replace("opacity-0", "opacity-100"), 50);
+
+  const header = document.createElement("div");
+  header.className =
+    "flex items-center justify-between mb-8 pb-4 border-b border-panel";
   header.innerHTML = `
     <button id="btn-back" class="flex items-center space-x-2 text-text-secondary hover:text-terminal-green transition-colors cursor-pointer">
-      ${renderIcon(Icons.ArrowLeft, 'w-4 h-4')}
+      ${renderIcon(Icons.ArrowLeft, "w-4 h-4")}
       <span>RETURN TO ROOT</span>
     </button>
     <div class="flex items-center space-x-4">
@@ -20,13 +22,14 @@ export function renderNotebook({ onBack }) {
     </div>
   `;
 
-  const content = document.createElement('div');
-  content.className = "grid grid-cols-1 md:grid-cols-2 gap-6 h-full min-h-0 overflow-hidden";
-  
+  const content = document.createElement("div");
+  content.className =
+    "grid grid-cols-1 md:grid-cols-2 gap-6 flex-grow min-h-0 overflow-hidden";
+
   content.innerHTML = `
     <div class="flex flex-col h-full bg-black/30 border border-panel p-4 md:p-6 overflow-hidden relative">
       <h3 class="text-terminal-green mb-4 text-glow flex items-center">
-        ${renderIcon(Icons.BookOpen, 'w-4 h-4 mr-2')}
+        ${renderIcon(Icons.BookOpen, "w-4 h-4 mr-2")}
         REFERENCE CHARTS
       </h3>
       <div class="space-y-4 overflow-y-auto custom-scrollbar flex-grow text-sm pr-2">
@@ -84,7 +87,7 @@ export function renderNotebook({ onBack }) {
     
     <div class="flex flex-col h-full bg-black/30 border border-panel p-4 md:p-6 overflow-hidden">
       <h3 class="text-terminal-green mb-4 text-glow flex items-center">
-        ${renderIcon(Icons.Edit2, 'w-4 h-4 mr-2')}
+        ${renderIcon(Icons.Edit2, "w-4 h-4 mr-2")}
         CLASSIFIED FINDINGS
       </h3>
       <textarea id="player-notes" class="flex-grow w-full bg-black/40 border border-panel p-4 resize-none focus:outline-none focus:border-terminal-green focus:shadow-[inset_0_0_10px_rgba(34,197,94,0.1)] text-text-primary custom-scrollbar leading-relaxed font-mono transition-all" placeholder="[ DOCUMENT YOUR ANALYSIS HERE ]\n\nLocal storage active. Observations persist between sessions."></textarea>
@@ -95,16 +98,16 @@ export function renderNotebook({ onBack }) {
   container.appendChild(content);
 
   setTimeout(() => {
-    container.querySelector('#btn-back').addEventListener('click', () => {
+    container.querySelector("#btn-back").addEventListener("click", () => {
       audioManager.playKeypress();
       onBack();
     });
 
-    const notesArea = container.querySelector('#player-notes');
-    notesArea.value = localStorage.getItem('turing_player_notes') || '';
-    
-    notesArea.addEventListener('input', (e) => {
-      localStorage.setItem('turing_player_notes', e.target.value);
+    const notesArea = container.querySelector("#player-notes");
+    notesArea.value = localStorage.getItem("turing_player_notes") || "";
+
+    notesArea.addEventListener("input", (e) => {
+      localStorage.setItem("turing_player_notes", e.target.value);
     });
   }, 0);
 
