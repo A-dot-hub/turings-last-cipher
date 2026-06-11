@@ -6,6 +6,7 @@ import { renderAchievements } from "./components/Achievements.js";
 import { renderBootSequence } from "./components/BootSequence.js";
 import { renderArchive } from "./components/Archive.js";
 import { renderNotebook } from "./components/Notebook.js";
+import { renderTutorialModal } from "./components/TutorialModal.js";
 import { LEVELS } from "./data/gameData.js";
 import { audioManager } from "./managers/AudioManager.js";
 import { stateManager } from "./managers/StateManager.js";
@@ -86,6 +87,16 @@ export class App {
         onNavigate: (route) => this.setViewState(route),
       });
       viewContainer.appendChild(menu);
+
+      // Show tutorial if first time
+      if (!sessionStorage.getItem("tutorial_shown")) {
+        const tutorial = renderTutorialModal({
+          onComplete: () => {
+            sessionStorage.setItem("tutorial_shown", "1");
+          },
+        });
+        viewContainer.appendChild(tutorial);
+      }
     } else if (this.viewState === "chapters") {
       const chapters = renderLevelSelect({
         unlockedLevel: stateManager.state.unlockedLevel,
