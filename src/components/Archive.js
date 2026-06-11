@@ -1,19 +1,35 @@
-import { Icons, renderIcon } from '../icons.js';
-import { LEVELS } from '../data/gameData.js';
-import { stateManager } from '../managers/StateManager.js';
-import { audioManager } from '../managers/AudioManager.js';
+import { Icons, renderIcon } from "../icons.js";
+import { LEVELS } from "../data/gameData.js";
+import { stateManager } from "../managers/StateManager.js";
+import { audioManager } from "../managers/AudioManager.js";
+
+function generateWarLog(levelId) {
+  const reports = [
+    "Signal strength weakening. Enemy patterns suggest high-level organizational shifts.",
+    "Intelligence gathering complete. No further movement detected in the sector.",
+    "Static interference reported near Northern base. Monitoring frequency adjustments.",
+    "Transmission decrypted. Payload indicates urgent supply chain disruptions.",
+    "Observation logs updated. Enemy unit movement confirmed in secondary grid.",
+    "Cryptographic analysis successful. Key rotation interval has increased by 15%.",
+    "Intercepted courier suggests tactical repositioning behind primary fortifications.",
+    "Turing unit performance optimized. Bombes operating at maximum capacity.",
+  ];
+  return reports[levelId % reports.length];
+}
 
 export function renderArchive({ onBack }) {
-  const container = document.createElement('div');
-  container.className = "flex flex-col h-full w-full max-w-5xl mx-auto p-4 md:p-8 z-10 relative opacity-0 transition-opacity duration-500 text-text-primary font-mono";
-  
-  setTimeout(() => container.classList.replace('opacity-0', 'opacity-100'), 50);
+  const container = document.createElement("div");
+  container.className =
+    "flex flex-col h-full w-full max-w-5xl mx-auto p-4 md:p-8 z-10 relative opacity-0 transition-opacity duration-500 text-text-primary font-mono";
 
-  const header = document.createElement('div');
-  header.className = "flex items-center justify-between mb-8 pb-4 border-b border-panel";
+  setTimeout(() => container.classList.replace("opacity-0", "opacity-100"), 50);
+
+  const header = document.createElement("div");
+  header.className =
+    "flex items-center justify-between mb-8 pb-4 border-b border-panel";
   header.innerHTML = `
     <button id="btn-back" class="flex items-center space-x-2 text-text-secondary hover:text-terminal-green transition-colors cursor-pointer">
-      ${renderIcon(Icons.ArrowLeft, 'w-4 h-4')}
+      ${renderIcon(Icons.ArrowLeft, "w-4 h-4")}
       <span>RETURN TO ROOT</span>
     </button>
     <div class="flex items-center space-x-4">
@@ -23,27 +39,30 @@ export function renderArchive({ onBack }) {
   `;
 
   const unlocked = stateManager.state.unlockedLevel;
-  
-  const listContainer = document.createElement('div');
-  listContainer.className = "space-y-6 overflow-y-auto custom-scrollbar flex-grow pr-4 pb-12";
+
+  const listContainer = document.createElement("div");
+  listContainer.className =
+    "space-y-6 overflow-y-auto custom-scrollbar flex-grow pr-4 pb-12";
 
   LEVELS.forEach((level, index) => {
     if (level.id >= unlocked) return; // Only show solved levels
 
-    const item = document.createElement('div');
-    item.className = "p-6 border border-panel bg-black/40 hover:border-terminal-green/30 transition-colors relative overflow-hidden group";
-    
+    const item = document.createElement("div");
+    item.className =
+      "p-6 border border-panel bg-black/40 hover:border-terminal-green/30 transition-colors relative overflow-hidden group";
+
     // Add visual watermark
-    const watermark = document.createElement('div');
-    watermark.className = "absolute -right-4 -top-4 text-[8rem] font-display opacity-[0.02] text-terminal-green pointer-events-none group-hover:opacity-[0.04] transition-opacity";
-    watermark.innerText = level.id.toString().padStart(2, '0');
+    const watermark = document.createElement("div");
+    watermark.className =
+      "absolute -right-4 -top-4 text-[8rem] font-display opacity-[0.02] text-terminal-green pointer-events-none group-hover:opacity-[0.04] transition-opacity";
+    watermark.innerText = level.id.toString().padStart(2, "0");
     item.appendChild(watermark);
 
-    const innerContent = document.createElement('div');
+    const innerContent = document.createElement("div");
     innerContent.className = "relative z-10";
     innerContent.innerHTML = `
       <div class="flex items-center space-x-3 mb-6 border-b border-panel/50 pb-4">
-        ${renderIcon(Icons.FileText, 'w-5 h-5 text-terminal-green')}
+        ${renderIcon(Icons.FileText, "w-5 h-5 text-terminal-green")}
         <h3 class="font-display tracking-wider text-xl text-terminal-green/90 group-hover:text-terminal-green transition-colors">${level.title}</h3>
       </div>
       
@@ -56,12 +75,14 @@ export function renderArchive({ onBack }) {
           <div class="text-text-primary font-mono text-sm break-all opacity-70 mb-4 bg-black/50 p-2 border border-panel/50">${level.cipherText}</div>
           
           <div class="mb-2 text-xs tracking-widest text-terminal-green/50">DECRYPTED PAYLOAD:</div>
-          <div class="text-terminal-green font-display text-lg px-2 border-l-2 border-terminal-green/50">${level.plainText || level.answerPlaintext || ''}</div>
+          <div class="text-terminal-green font-display text-lg px-2 border-l-2 border-terminal-green/50">${level.plainText || level.answerPlaintext || ""}</div>
         </div>
         
         <div class="md:col-span-2 text-text-secondary text-sm leading-relaxed whitespace-pre-wrap pl-4 border-l border-panel/30">
           <div class="mb-3 text-xs tracking-widest text-text-secondary/50 flex items-center"><span class="w-2 h-2 bg-text-secondary/30 rounded-full mr-2"></span> HISTORICAL LOG:</div>
-          <div class="mb-2 opacity-90">${level.lore}</div>
+          <div class="mb-4 opacity-90">${level.lore}</div>
+          <div class="mb-2 text-xs tracking-widest text-accent-gold/60 flex items-center"><span class="w-2 h-2 bg-accent-gold/30 rounded-full mr-2"></span> WAR LOG DATA:</div>
+          <div class="text-accent-gold/80 italic text-xs font-mono bg-black/30 p-2 border-l border-accent-gold/20">>> ${generateWarLog(level.id)}</div>
         </div>
       </div>
     `;
@@ -70,15 +91,18 @@ export function renderArchive({ onBack }) {
     listContainer.appendChild(item);
   });
 
-  if (unlocked === 1) {
-    listContainer.innerHTML = '<div class="text-center text-text-secondary py-12 flex flex-col items-center"><div class="opacity-30 mb-4">' + renderIcon(Icons.Lock, 'w-12 h-12') + '</div><p>NO ENCRYPTED ARCHIVES RECOVERED YET.</p></div>';
+  if (listContainer.children.length === 0) {
+    listContainer.innerHTML =
+      '<div class="text-center text-text-secondary py-12 flex flex-col items-center"><div class="opacity-30 mb-4">' +
+      renderIcon(Icons.Lock, "w-12 h-12") +
+      "</div><p>NO ENCRYPTED ARCHIVES RECOVERED YET.</p></div>";
   }
 
   container.appendChild(header);
   container.appendChild(listContainer);
 
   setTimeout(() => {
-    container.querySelector('#btn-back').addEventListener('click', () => {
+    container.querySelector("#btn-back").addEventListener("click", () => {
       audioManager.playKeypress();
       onBack();
     });
