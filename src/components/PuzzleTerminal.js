@@ -83,28 +83,28 @@ export function renderPuzzleTerminal({ level, onBack, onSolve }) {
 
   function renderTuringTestUI(lvl) {
     return `
-      <div class="flex flex-col h-full">
-        <div class="text-text-secondary text-xs tracking-widest mb-4">THE IMITATION GAME: IDENTITY ANALYSIS</div>
+      <div class="flex flex-col h-full min-h-0">
+        <div class="text-text-secondary text-xs tracking-widest mb-4 flex-shrink-0">THE IMITATION GAME: IDENTITY ANALYSIS</div>
         
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 flex-grow">
-          <div class="bg-black/30 border border-panel p-4 overflow-y-auto">
-            <h4 class="text-accent-gold mb-4 border-b border-panel pb-2">ENTITY A</h4>
-            <div class="space-y-4 text-sm text-text-primary leading-relaxed opacity-90">
-              ${lvl.entities.A.map(t => `<p>"${t}"</p>`).join('')}
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 flex-grow overflow-y-auto custom-scrollbar p-1">
+          <div class="bg-black/30 border border-panel p-4 flex flex-col h-full">
+            <h4 class="text-accent-gold mb-4 border-b border-panel pb-2 flex-shrink-0">ENTITY A</h4>
+            <div class="space-y-4 text-sm text-text-primary leading-relaxed opacity-90 overflow-y-auto flex-grow custom-scrollbar pr-2">
+              ${lvl.entities.A.map(t => `<p class="bg-bg-secondary p-3 border-l-2 border-accent-gold/50">"${t}"</p>`).join('')}
             </div>
-            <button class="mt-6 w-full py-2 border border-accent-gold/50 text-accent-gold hover:bg-accent-gold/10 transition-colors btn-select-entity" data-entity="A">SELECT A AS HUMAN</button>
+            <button class="mt-4 w-full py-2 border border-accent-gold/50 text-accent-gold hover:bg-accent-gold/10 transition-colors btn-select-entity flex-shrink-0" data-entity="A">SELECT A AS HUMAN</button>
           </div>
           
-          <div class="bg-black/30 border border-panel p-4 overflow-y-auto">
-            <h4 class="text-accent-blue mb-4 border-b border-panel pb-2">ENTITY B</h4>
-            <div class="space-y-4 text-sm text-text-primary leading-relaxed opacity-90">
-              ${lvl.entities.B.map(t => `<p>"${t}"</p>`).join('')}
+          <div class="bg-black/30 border border-panel p-4 flex flex-col h-full">
+            <h4 class="text-accent-blue mb-4 border-b border-panel pb-2 flex-shrink-0">ENTITY B</h4>
+            <div class="space-y-4 text-sm text-text-primary leading-relaxed opacity-90 overflow-y-auto flex-grow custom-scrollbar pr-2">
+              ${lvl.entities.B.map(t => `<p class="bg-bg-secondary p-3 border-l-2 border-accent-blue/50">"${t}"</p>`).join('')}
             </div>
-            <button class="mt-6 w-full py-2 border border-accent-blue/50 text-accent-blue hover:bg-accent-blue/10 transition-colors btn-select-entity" data-entity="B">SELECT B AS HUMAN</button>
+            <button class="mt-4 w-full py-2 border border-accent-blue/50 text-accent-blue hover:bg-accent-blue/10 transition-colors btn-select-entity flex-shrink-0" data-entity="B">SELECT B AS HUMAN</button>
           </div>
         </div>
 
-        <div class="mt-auto" id="form-container">
+        <div class="mt-auto flex-shrink-0" id="form-container">
           <div id="error-msg" class="text-red-400 text-xs mb-4 uppercase hidden"></div>
           <div id="tt-result" class="hidden font-display text-terminal-green text-center p-6 border border-terminal-green block"></div>
           <div id="success-msg" class="hidden text-center p-8 border border-terminal-green bg-terminal-green/10 transform transition-all scale-95 opacity-0 duration-500">
