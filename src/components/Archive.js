@@ -20,7 +20,7 @@ function generateWarLog(levelId) {
 export function renderArchive({ onBack }) {
   const container = document.createElement("div");
   container.className =
-    "flex flex-col h-full w-full max-w-5xl mx-auto p-4 md:p-8 z-10 relative opacity-0 transition-opacity duration-500 text-text-primary font-mono";
+    "flex flex-col h-full w-full max-w-5xl mx-auto p-4 md:p-8 z-10 relative opacity-0 transition-opacity duration-500 text-text-primary font-mono bg-bg-primary";
 
   setTimeout(() => container.classList.replace("opacity-0", "opacity-100"), 50);
 
@@ -62,7 +62,7 @@ export function renderArchive({ onBack }) {
     innerContent.className = "relative z-10";
     innerContent.innerHTML = `
       <div class="flex items-center space-x-3 mb-6 border-b border-panel/50 pb-4">
-        ${renderIcon(Icons.FileText, "w-5 h-5 text-terminal-green")}
+        ${renderIcon(Icons.BookOpen, "w-5 h-5 text-terminal-green")}
         <h3 class="font-display tracking-wider text-xl text-terminal-green/90 group-hover:text-terminal-green transition-colors">${level.title}</h3>
       </div>
       
