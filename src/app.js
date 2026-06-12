@@ -7,6 +7,7 @@ import { renderBootSequence } from "./components/BootSequence.js";
 import { renderArchive } from "./components/Archive.js";
 import { renderNotebook } from "./components/Notebook.js";
 import { renderTutorialModal } from "./components/TutorialModal.js";
+import { renderTopNav } from "./components/TopNav.js";
 import { LEVELS } from "./data/gameData.js";
 import { audioManager } from "./managers/AudioManager.js";
 import { stateManager } from "./managers/StateManager.js";
@@ -64,6 +65,12 @@ export class App {
     document.addEventListener("click", initAudio);
 
     this.root.appendChild(renderCrtOverlay());
+
+    if (this.viewState !== "boot") {
+      this.root.appendChild(
+        renderTopNav({ currentChapter: this.currentLevel }),
+      );
+    }
 
     const bg = document.createElement("div");
     bg.className =
