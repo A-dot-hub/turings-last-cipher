@@ -67,8 +67,9 @@ export class App {
     this.root.appendChild(renderCrtOverlay());
 
     if (this.viewState !== "boot") {
+      const progress = (stateManager.state.unlockedLevel - 1) / LEVELS.length;
       this.root.appendChild(
-        renderTopNav({ currentChapter: this.currentLevel }),
+        renderTopNav({ currentChapter: this.currentLevel, progress }),
       );
     }
 
