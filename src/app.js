@@ -8,6 +8,7 @@ import { renderArchive } from "./components/Archive.js";
 import { renderNotebook } from "./components/Notebook.js";
 import { renderTutorialModal } from "./components/TutorialModal.js";
 import { renderTopNav } from "./components/TopNav.js";
+import { renderSystemLogPanel } from "./components/SystemLogPanel.js";
 import { LEVELS } from "./data/gameData.js";
 import { audioManager } from "./managers/AudioManager.js";
 import { stateManager } from "./managers/StateManager.js";
@@ -71,6 +72,7 @@ export class App {
       this.root.appendChild(
         renderTopNav({ currentChapter: this.currentLevel, progress }),
       );
+      this.root.appendChild(renderSystemLogPanel());
     }
 
     const bg = document.createElement("div");
