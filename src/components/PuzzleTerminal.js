@@ -104,7 +104,7 @@ export function renderPuzzleTerminal({ level, onBack, onSolve }) {
       <div class="flex flex-col h-full min-h-0">
         <div class="text-text-secondary text-xs tracking-widest mb-4 flex-shrink-0">THE IMITATION GAME: IDENTITY ANALYSIS</div>
         
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 flex-grow overflow-hidden custom-scrollbar p-1">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 flex-grow overflow-y-auto custom-scrollbar p-1">
           <div class="bg-black/30 border border-panel p-4 flex flex-col h-full min-h-0">
             <h4 class="text-accent-gold mb-4 border-b border-panel pb-2 flex-shrink-0">ENTITY A</h4>
             <div class="space-y-4 text-sm text-text-primary leading-relaxed opacity-90 overflow-y-auto flex-grow custom-scrollbar pr-2 min-h-0">
