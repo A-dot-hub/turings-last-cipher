@@ -1,6 +1,6 @@
 export function renderSystemLogPanel() {
   const panel = document.createElement("div");
-  // Bottom right, compact, floating
+  // Bottom right, compact,
   panel.className =
     "fixed bottom-6 right-6 w-72 flex flex-col items-end gap-2 z-40 pointer-events-none";
   panel.id = "system-log-panel";
